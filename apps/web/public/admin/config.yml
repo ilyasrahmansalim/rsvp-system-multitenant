@@ -3,15 +3,15 @@
 
 backend:
   name: github
-  repo: USERNAME/NAMA-REPO   # <-- ganti dengan repo GitHub Anda
+  repo: ilyasrahmansalim/rsvp-system-multitenant
   branch: main
 
-# Login di Cloudflare Pages: pakai "Sign In with Token" (GitHub PAT) di halaman /admin,
+# Login di GitHub Pages / admin: pakai "Sign In with Token" (GitHub PAT) di halaman /admin,
 # atau pasang OAuth proxy (lihat README). Untuk edit lokal: buka /admin di Chrome/Edge
 # dan pilih "Work with Local Repository".
 
-site_url: https://halo.pages.dev
-display_url: https://halo.pages.dev
+site_url: https://ilyasrahmansalim.github.io/rsvp-system-multitenant
+display_url: https://ilyasrahmansalim.github.io/rsvp-system-multitenant
 publish_mode: simple
 
 media_folder: apps/web/public/uploads
