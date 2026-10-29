@@ -1,0 +1,74 @@
+# Sveltia CMS — mengelola event di apps/web/src/content/rsvp/*.toml
+# Path di bawah ini RELATIF TERHADAP ROOT REPOSITORI (bukan folder apps/web).
+
+backend:
+  name: github
+  repo: USERNAME/NAMA-REPO   # <-- ganti dengan repo GitHub Anda
+  branch: main
+
+# Login di Cloudflare Pages: pakai "Sign In with Token" (GitHub PAT) di halaman /admin,
+# atau pasang OAuth proxy (lihat README). Untuk edit lokal: buka /admin di Chrome/Edge
+# dan pilih "Work with Local Repository".
+
+site_url: https://halo.pages.dev
+display_url: https://halo.pages.dev
+publish_mode: simple
+
+media_folder: apps/web/public/uploads
+public_folder: /uploads
+
+collections:
+  - name: rsvp
+    label: Event RSVP
+    label_singular: Event
+    folder: apps/web/src/content/rsvp
+    extension: toml
+    format: toml
+    create: true
+    delete: true
+    slug: '{{event_id}}'
+    identifier_field: event_id
+    summary: '{{title}} ({{event_id}})'
+    fields:
+      - label: Event ID (slug URL)
+        name: event_id
+        widget: string
+        pattern: ['^[a-z0-9]+(?:-[a-z0-9]+)*$', 'Huruf kecil, angka, dan strip saja. Ini menjadi URL: /event-id']
+        hint: Menjadi nama file dan alamat halaman. Jangan diubah setelah event dipublikasikan.
+      - { label: Judul, name: title, widget: string }
+      - { label: Deskripsi, name: description, widget: text }
+      - label: Tanggal & waktu
+        name: event_date
+        widget: datetime
+      - { label: Lokasi, name: location, widget: string }
+      - label: Spreadsheet ID
+        name: spreadsheet_id
+        widget: string
+        hint: ID Google Sheet khusus event ini (bagian antara /d/ dan /edit pada URL sheet).
+      - label: Ada penugasan?
+        name: has_assignment
+        widget: boolean
+        default: false
+        hint: Jika aktif, QR tiket terkunci sampai peserta mengunggah penugasan.
+      - label: Judul penugasan
+        name: assignment_title
+        widget: string
+        required: false
+      - label: Petunjuk penugasan
+        name: assignment_instructions
+        widget: text
+        required: false
+      - label: Tema
+        name: theme
+        widget: select
+        default: light
+        options: [light, dark, cupcake, corporate, emerald, forest, synthwave, retro]
+      - label: Jadwal acara
+        name: schedule
+        widget: list
+        required: false
+        summary: '{{fields.time}} — {{fields.title}}'
+        fields:
+          - { label: Jam, name: time, widget: string, hint: 'Contoh: 09:30' }
+          - { label: Acara, name: title, widget: string }
+          - { label: Keterangan, name: description, widget: string, required: false }

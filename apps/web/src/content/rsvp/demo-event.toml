@@ -1,0 +1,31 @@
+# Event dengan penugasan: QR tiket TERKUNCI sampai peserta mengunggah penugasan.
+event_id = "demo-event"
+title = "Workshop Membangun Website Modern"
+description = "Setengah hari praktik membuat website statis yang cepat dengan Astro dan Tailwind. Peserta pulang membawa satu halaman yang sudah online."
+event_date = 2026-12-12T09:00:00+07:00
+location = "Aula Utama, Surabaya"
+spreadsheet_id = "GANTI_DENGAN_ID_SHEET_DEMO_EVENT"
+has_assignment = true
+theme = "cupcake"
+assignment_title = "Unggah rancangan halaman Anda"
+assignment_instructions = "Kirim satu file (PDF, gambar, atau ZIP, maks. 5 MB) berisi sketsa atau desain halaman yang ingin Anda bangun di workshop. Tiket QR muncul setelah file diterima."
+
+[[schedule]]
+time = "09:00"
+title = "Registrasi ulang"
+description = "Tunjukkan tiket QR di meja registrasi."
+
+[[schedule]]
+time = "09:30"
+title = "Pengantar Astro dan island architecture"
+description = "Cara kerja halaman statis yang tetap interaktif."
+
+[[schedule]]
+time = "11:00"
+title = "Praktik: membuat halaman dari desain Anda"
+description = "Pendampingan langsung oleh mentor."
+
+[[schedule]]
+time = "13:00"
+title = "Deploy ke Cloudflare Pages"
+description = "Halaman Anda online sebelum acara selesai."

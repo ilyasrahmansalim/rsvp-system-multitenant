@@ -1,0 +1,18 @@
+{
+  "name": "rsvp-event-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "RSVP Event multi-tenant: Astro + DaisyUI + Sveltia CMS + Google Apps Script",
+  "scripts": {
+    "dev": "pnpm --filter @rsvp/web dev",
+    "build": "pnpm --filter @rsvp/web build",
+    "preview": "pnpm --filter @rsvp/web preview",
+    "check": "pnpm --filter @rsvp/web check"
+  },
+  "engines": {
+    "node": ">=18.20.8"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": ["esbuild", "sharp"]
+  }
+}

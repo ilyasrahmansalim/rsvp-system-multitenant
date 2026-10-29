@@ -1,0 +1,153 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import EventLayout from '../../layouts/EventLayout.astro';
+
+export async function getStaticPaths() {
+  const events = await getCollection('rsvp');
+  return events.map((event) => ({ params: { nama_event: event.id }, props: { event } }));
+}
+
+interface Props {
+  event: CollectionEntry<'rsvp'>;
+}
+const { event } = Astro.props;
+const e = event.data;
+const slug = event.id;
+---
+
+<EventLayout title={`Masuk — ${e.title}`} theme={e.theme} slug={slug} eventTitle={e.title}>
+  <main
+    id="app"
+    class="mx-auto w-full max-w-md px-4 py-12"
+    data-slug={slug}
+    data-event-id={e.event_id}
+    data-spreadsheet-id={e.spreadsheet_id}
+    data-has-assignment={String(e.has_assignment)}
+  >
+    <h1 class="text-3xl font-extrabold">Akun peserta</h1>
+    <p class="mt-2 text-base-content/70">{e.title}</p>
+
+    <div role="tablist" class="tabs tabs-boxed mt-8">
+      <button role="tab" type="button" id="tab-login" class="tab tab-active" aria-selected="true" aria-controls="panel-login">Masuk</button>
+      <button role="tab" type="button" id="tab-register" class="tab" aria-selected="false" aria-controls="panel-register">Daftar</button>
+    </div>
+
+    <div id="alert" role="alert" class="alert alert-error mt-6 hidden"><span id="alert-text"></span></div>
+
+    <div class="card mt-6 bg-base-100 shadow-md">
+      <div class="card-body">
+        <form id="panel-login" class="space-y-4" novalidate>
+          <label class="form-control">
+            <span class="label-text mb-1">Email</span>
+            <input name="email" type="email" required autocomplete="email" class="input input-bordered" />
+          </label>
+          <label class="form-control">
+            <span class="label-text mb-1">Password</span>
+            <input name="password" type="password" required autocomplete="current-password" class="input input-bordered" />
+          </label>
+          <button type="submit" class="btn btn-primary w-full">
+            <span class="loading loading-spinner loading-sm hidden"></span>
+            <span class="label">Masuk</span>
+          </button>
+        </form>
+
+        <form id="panel-register" class="hidden space-y-4" novalidate>
+          <label class="form-control">
+            <span class="label-text mb-1">Nama lengkap</span>
+            <input name="name" type="text" required minlength="2" autocomplete="name" class="input input-bordered" />
+          </label>
+          <label class="form-control">
+            <span class="label-text mb-1">Email</span>
+            <input name="email" type="email" required autocomplete="email" class="input input-bordered" />
+          </label>
+          <label class="form-control">
+            <span class="label-text mb-1">Nomor WhatsApp</span>
+            <input name="phone" type="tel" autocomplete="tel" class="input input-bordered" />
+          </label>
+          <label class="form-control">
+            <span class="label-text mb-1">Password</span>
+            <input name="password" type="password" required minlength="8" autocomplete="new-password" class="input input-bordered" />
+            <span class="label-text-alt mt-1 text-base-content/60">Minimal 8 karakter.</span>
+          </label>
+          <button type="submit" class="btn btn-primary w-full">
+            <span class="loading loading-spinner loading-sm hidden"></span>
+            <span class="label">Buat akun</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </main>
+</EventLayout>
+
+<script>
+  import { fetchMe, login, register, type EventCtx } from '../../lib/api';
+
+  const root = document.getElementById('app') as HTMLElement;
+  const ctx: EventCtx = {
+    eventId: root.dataset.eventId!,
+    spreadsheetId: root.dataset.spreadsheetId!,
+    hasAssignment: root.dataset.hasAssignment === 'true',
+  };
+  const dashboardUrl = `/${root.dataset.slug}/dashboard`;
+
+  const tabs = { login: document.getElementById('tab-login')!, register: document.getElementById('tab-register')! };
+  const panels = {
+    login: document.getElementById('panel-login') as HTMLFormElement,
+    register: document.getElementById('panel-register') as HTMLFormElement,
+  };
+  const alertBox = document.getElementById('alert')!;
+  const alertText = document.getElementById('alert-text')!;
+
+  function showTab(name: 'login' | 'register') {
+    for (const key of ['login', 'register'] as const) {
+      const active = key === name;
+      tabs[key].classList.toggle('tab-active', active);
+      tabs[key].setAttribute('aria-selected', String(active));
+      panels[key].classList.toggle('hidden', !active);
+    }
+    alertBox.classList.add('hidden');
+  }
+  tabs.login.addEventListener('click', () => showTab('login'));
+  tabs.register.addEventListener('click', () => showTab('register'));
+  if (new URLSearchParams(location.search).get('tab') === 'register') showTab('register');
+
+  function showError(msg: string) {
+    alertText.textContent = msg;
+    alertBox.classList.remove('hidden');
+  }
+
+  function bind(form: HTMLFormElement, run: (data: FormData) => Promise<unknown>) {
+    const btn = form.querySelector('button[type=submit]') as HTMLButtonElement;
+    const spinner = btn.querySelector('.loading')!;
+    form.addEventListener('submit', async (ev) => {
+      ev.preventDefault();
+      alertBox.classList.add('hidden');
+      if (!form.reportValidity()) return;
+      btn.disabled = true;
+      spinner.classList.remove('hidden');
+      try {
+        await run(new FormData(form));
+        location.assign(dashboardUrl);
+      } catch (err) {
+        showError(err instanceof Error ? err.message : 'Terjadi kesalahan.');
+        btn.disabled = false;
+        spinner.classList.add('hidden');
+      }
+    });
+  }
+
+  bind(panels.login, (d) => login(ctx, { email: String(d.get('email')), password: String(d.get('password')) }));
+  bind(panels.register, (d) =>
+    register(ctx, {
+      name: String(d.get('name')),
+      email: String(d.get('email')),
+      phone: String(d.get('phone') ?? ''),
+      password: String(d.get('password')),
+    }),
+  );
+
+  // Sudah login? Langsung ke dashboard.
+  fetchMe(ctx).then((user) => {
+    if (user) location.replace(dashboardUrl);
+  }).catch(() => {});
+</script>

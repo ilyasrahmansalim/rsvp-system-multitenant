@@ -1,0 +1,11 @@
+{
+  "name": "@rsvp/backend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Google Apps Script backend (opsional: deploy via clasp)",
+  "scripts": {
+    "login": "npx @google/clasp login",
+    "push": "npx @google/clasp push",
+    "deploy": "npx @google/clasp deploy"
+  }
+}

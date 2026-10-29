@@ -1,0 +1,23 @@
+# Event tanpa penugasan: QR tiket LANGSUNG muncul setelah peserta login.
+event_id = "simple-event"
+title = "Temu Komunitas Desainer Surabaya"
+description = "Kumpul santai bulanan untuk berbagi proyek, minta masukan, dan kenalan. Tidak perlu persiapan apa pun."
+event_date = 2026-11-28T16:00:00+07:00
+location = "Kedai Kopi Tepi Kali, Surabaya"
+spreadsheet_id = "GANTI_DENGAN_ID_SHEET_SIMPLE_EVENT"
+has_assignment = false
+theme = "emerald"
+
+[[schedule]]
+time = "16:00"
+title = "Pintu dibuka"
+description = "Ambil tempat duduk dan pesan minuman."
+
+[[schedule]]
+time = "16:30"
+title = "Lightning talk"
+description = "Tiga pembicara, masing-masing lima menit."
+
+[[schedule]]
+time = "17:30"
+title = "Ngobrol bebas"

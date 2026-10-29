@@ -1,0 +1,92 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import EventLayout from '../../layouts/EventLayout.astro';
+import { formatDate, formatTime } from '../../lib/format';
+
+export async function getStaticPaths() {
+  const events = await getCollection('rsvp');
+  return events.map((event) => ({ params: { nama_event: event.id }, props: { event } }));
+}
+
+interface Props {
+  event: CollectionEntry<'rsvp'>;
+}
+const { event } = Astro.props;
+const e = event.data;
+const slug = event.id;
+---
+
+<EventLayout title={e.title} description={e.description} theme={e.theme} slug={slug} eventTitle={e.title}>
+  <header class="bg-base-100">
+    <div class="mx-auto grid w-full max-w-5xl gap-8 px-4 py-14 sm:py-20 md:grid-cols-[1fr_auto] md:items-end">
+      <div>
+        <h1 class="max-w-[18ch] text-4xl font-extrabold leading-[1.05] sm:text-6xl">{e.title}</h1>
+        <p class="mt-5 max-w-[60ch] text-lg leading-relaxed text-base-content/75">{e.description}</p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href={`/${slug}/auth?tab=register`} class="btn btn-primary btn-lg">Daftar sekarang</a>
+          <a href={`/${slug}/auth`} class="btn btn-ghost btn-lg">Sudah punya akun? Masuk</a>
+        </div>
+      </div>
+
+      <dl class="stats stats-vertical w-full border border-base-300 shadow-sm md:w-72">
+        <div class="stat">
+          <dt class="stat-title">Tanggal</dt>
+          <dd class="stat-value text-2xl">{formatDate(e.event_date)}</dd>
+          <dd class="stat-desc">Mulai {formatTime(e.event_date)}</dd>
+        </div>
+        <div class="stat">
+          <dt class="stat-title">Lokasi</dt>
+          <dd class="stat-value whitespace-normal text-2xl">{e.location}</dd>
+        </div>
+      </dl>
+    </div>
+  </header>
+
+  <main class="mx-auto w-full max-w-5xl space-y-12 px-4 py-12">
+    {
+      e.has_assignment && (
+        <div role="alert" class="alert alert-info">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+          <div>
+            <h2 class="font-bold">Event ini punya penugasan</h2>
+            <p class="text-sm">Tiket QR Anda baru aktif setelah Anda mengunggah penugasan di dashboard.</p>
+          </div>
+        </div>
+      )
+    }
+
+    {
+      e.schedule.length > 0 && (
+        <section aria-labelledby="jadwal">
+          <h2 id="jadwal" class="text-2xl font-bold">Jadwal acara</h2>
+          <ul class="timeline timeline-vertical timeline-compact mt-6">
+            {e.schedule.map((s, i) => (
+              <li>
+                {i > 0 && <hr />}
+                <div class="timeline-middle">
+                  <span class="block h-3 w-3 rounded-full bg-primary" />
+                </div>
+                <div class="timeline-end mb-8 ml-2">
+                  <time class="badge badge-neutral">{s.time}</time>
+                  <p class="mt-1 text-lg font-semibold">{s.title}</p>
+                  {s.description && <p class="text-base-content/70">{s.description}</p>}
+                </div>
+                {i < e.schedule.length - 1 && <hr />}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    <section class="card bg-primary text-primary-content">
+      <div class="card-body items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h2 class="card-title text-2xl">Amankan kursi Anda</h2>
+          <p>Pendaftaran gratis dan hanya butuh satu menit.</p>
+        </div>
+        <a href={`/${slug}/auth?tab=register`} class="btn btn-secondary">Buat akun peserta</a>
+      </div>
+    </section>
+  </main>
+</EventLayout>

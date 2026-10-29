@@ -1,0 +1,13 @@
+packages:
+  - "apps/*"
+  - "packages/*"
+  - "backend"
+
+# Izinkan postinstall untuk esbuild & sharp (pnpm 10+ memblokir build script secara default).
+# `onlyBuiltDependencies` untuk pnpm 10, `allowBuilds` untuk pnpm 11+.
+onlyBuiltDependencies:
+  - esbuild
+  - sharp
+allowBuilds:
+  esbuild: true
+  sharp: true

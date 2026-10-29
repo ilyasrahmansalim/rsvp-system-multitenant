@@ -1,0 +1,80 @@
+---
+import '../styles/global.css';
+import { isDemoMode } from '../lib/api';
+
+interface Props {
+  title: string;
+  description?: string;
+  theme?: string;
+  /** slug event; jika diisi, navbar menampilkan menu event */
+  slug?: string;
+  eventTitle?: string;
+}
+const { title, description = '', theme = 'light', slug, eventTitle } = Astro.props;
+const demo = isDemoMode;
+---
+
+<!doctype html>
+<html lang="id" data-theme={theme}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    {description && <meta name="description" content={description} />}
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="min-h-screen bg-base-200 font-sans text-base-content">
+    <div class="navbar sticky top-0 z-30 bg-base-100/90 shadow-sm backdrop-blur">
+      <div class="mx-auto flex w-full max-w-5xl items-center px-4">
+        <div class="flex-1">
+          <a href={slug ? `/${slug}` : '/'} class="font-display text-lg font-extrabold">
+            {eventTitle ?? 'RSVP Event'}
+          </a>
+        </div>
+        {
+          slug && (
+            <>
+              <ul class="menu menu-horizontal hidden gap-1 px-1 sm:flex">
+                <li><a href={`/${slug}`}>Beranda</a></li>
+                <li><a href={`/${slug}/auth`}>Masuk / Daftar</a></li>
+                <li><a href={`/${slug}/dashboard`}>Dashboard</a></li>
+              </ul>
+              <div class="dropdown dropdown-end sm:hidden">
+                <div tabindex="0" role="button" class="btn btn-ghost btn-square" aria-label="Buka menu">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                </div>
+                <ul tabindex="0" class="menu dropdown-content z-10 mt-3 w-52 rounded-box bg-base-100 p-2 shadow">
+                  <li><a href={`/${slug}`}>Beranda</a></li>
+                  <li><a href={`/${slug}/auth`}>Masuk / Daftar</a></li>
+                  <li><a href={`/${slug}/dashboard`}>Dashboard</a></li>
+                </ul>
+              </div>
+            </>
+          )
+        }
+      </div>
+    </div>
+
+    {
+      demo && (
+        <div role="alert" class="alert alert-warning rounded-none py-2 text-sm">
+          <span>
+            Mode demo: <code>PUBLIC_GAS_URL</code> belum diisi, data tersimpan di browser ini saja.
+          </span>
+        </div>
+      )
+    }
+
+    <slot />
+
+    <footer class="footer footer-center p-8 text-sm text-base-content/60">
+      <p>Dibuat dengan Astro, DaisyUI, Sveltia CMS, dan Google Apps Script.</p>
+    </footer>
+  </body>
+</html>
