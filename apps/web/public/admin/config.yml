@@ -6,12 +6,13 @@ backend:
   repo: ilyasrahmansalim/rsvp-system-multitenant
   branch: main
 
-# Login di GitHub Pages / admin: pakai "Sign In with Token" (GitHub PAT) di halaman /admin,
-# atau pasang OAuth proxy (lihat README). Untuk edit lokal: buka /admin di Chrome/Edge
-# dan pilih "Work with Local Repository".
+# Cloudflare Pages tidak menyediakan Netlify Identity / OAuth GitHub bawaan.
+# Untuk hosting statis native, Sveltia CMS harus login lewat GitHub PAT ("Sign in with Token")
+# atau lewat proxy OAuth seperti sveltia-cms-auth yang di-deploy di server/Worker.
+# Untuk edit lokal: buka /admin lalu pilih "Work with Local Repository".
 
-site_url: https://ilyasrahmansalim.github.io/rsvp-system-multitenant
-display_url: https://ilyasrahmansalim.github.io/rsvp-system-multitenant
+site_url: https://rsvp-system-multitenant.pages.dev
+display_url: https://rsvp-system-multitenant.pages.dev
 publish_mode: simple
 
 media_folder: apps/web/public/uploads

@@ -70,12 +70,14 @@ dengan baris: kolom A `has_assignment`, kolom B `true` atau `false` — nilai it
 `RSVP:<event_id>:<ticket_code>`, mis. `RSVP:demo-event:TKT-1A2B3C4D`. Scanner panitia cukup mencocokkan
 `ticket_code` di sheet `Users`. Ubah kolom `status` menjadi `checked_in` untuk menandai kehadiran.
 
-## Sveltia CMS
+## Sveltia CMS (Cloudflare Pages native)
 
-1. Edit `apps/web/public/admin/config.yml` → ganti `repo: USERNAME/NAMA-REPO`.
-2. Buka `/admin`, login dengan *GitHub Personal Access Token* (fine-grained, izin *Contents: read & write*),
-   atau pasang OAuth proxy ([sveltia-cms-auth](https://github.com/sveltia/sveltia-cms-auth)) untuk login tombol GitHub.
-3. Tambah event baru dari CMS → commit → Cloudflare Pages build ulang → halaman `/<event-id>` terbit.
+1. Edit `apps/web/public/admin/config.yml` → ganti `repo: USERNAME/NAMA-REPO` dengan repo GitHub Anda.
+2. Untuk hosting statis native di Cloudflare Pages, Sveltia CMS tidak memakai Netlify Identity. Jadi yang bisa dipakai adalah:
+   - *Sign in with Token* (GitHub PAT, izin *Contents: read & write*) di halaman `/admin`, atau
+   - proxy OAuth seperti [sveltia-cms-auth](https://github.com/sveltia/sveltia-cms-auth) jika ingin tombol *Sign in with GitHub* muncul.
+3. `site_url` dan `display_url` harus memakai domain Cloudflare Pages Anda, misalnya `https://rsvp-system-multitenant.pages.dev`.
+4. Tambah event baru dari CMS → commit → Cloudflare Pages build ulang → halaman `/<event-id>` terbit.
    Nama file mengikuti `event_id`, dan `event_id` wajib sama dengan nama file (divalidasi saat build).
 
 Path di `config.yml` relatif terhadap root repo (`apps/web/src/content/rsvp`) karena ini monorepo.
