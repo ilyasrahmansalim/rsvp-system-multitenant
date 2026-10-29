@@ -1,14 +1,13 @@
-# Event dengan penugasan: QR tiket TERKUNCI sampai peserta mengunggah penugasan.
-event_id = "demo-event"
-title = "Workshop Membangun Website Modern"
+event_id = "seminar"
+title = "Seminar Beyond"
 description = "Setengah hari praktik membuat website statis yang cepat dengan Astro dan Tailwind. Peserta pulang membawa satu halaman yang sudah online."
 event_date = 2026-12-12T09:00:00+07:00
 location = "Aula Utama, Surabaya"
 spreadsheet_id = "GANTI_DENGAN_ID_SHEET_DEMO_EVENT"
 has_assignment = true
-theme = "cupcake"
 assignment_title = "Unggah rancangan halaman Anda"
 assignment_instructions = "Kirim satu file (PDF, gambar, atau ZIP, maks. 5 MB) berisi sketsa atau desain halaman yang ingin Anda bangun di workshop. Tiket QR muncul setelah file diterima."
+theme = "cupcake"
 
 [[schedule]]
 time = "09:00"
